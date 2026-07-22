@@ -58,5 +58,5 @@ def quiz():
 def recommend(payload: RatingsIn):
     ratings = {k: float(v) for k, v in payload.ratings.items() if 1 <= float(v) <= 5}
     top = top_recommendations(ratings, k=3)
-    bottom = bottom_recommendations(ratings, k=1)
+    bottom = bottom_recommendations(ratings, k=3)
     return {"top": top, "avoid": bottom}
