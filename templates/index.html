@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What do you like?</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="card">
+  <h1>Rate a few things</h1>
+  <p class="sub">Based on __N_STUDENTS__ students before you, we'll guess what you'll like.</p>
+
+  <form id="quiz-form">
+__QUESTIONS_HTML__
+  </form>
+
+  <p class="hint">1 = do not like &nbsp;&middot;&nbsp; 5 = like very much</p>
+
+  <button id="submit-btn" disabled>See my recommendations</button>
+
+  <div id="result" class="result hidden">
+    <h2>You'll probably like...</h2>
+    <ul id="top-list"></ul>
+    <h2>You'll probably skip...</h2>
+    <ul id="avoid-list"></ul>
+    <button id="retry-btn">Try again</button>
+  </div>
+</div>
+
+<script>
+const ratings = {};
+const total = __TOTAL__;
+
+document.querySelectorAll('.scale').forEach(group => {
+  const item = group.dataset.item;
+  group.querySelectorAll('.scale-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      ratings[item] = parseInt(btn.dataset.value, 10);
+      document.getElementById('submit-btn').disabled = Object.keys(ratings).length < total;
+    });
+  });
+});
+
+document.getElementById('submit-btn').addEventListener('click', async () => {
+  const res = await fetch('/recommend', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ratings})
+  });
+  const data = await res.json();
+  const topList = document.getElementById('top-list');
+  const avoidList = document.getElementById('avoid-list');
+  topList.innerHTML = data.top.map(r => `<li>${r.item.replace(/_/g,' ')} <span>(${r.predicted_rating}/5)</span></li>`).join('');
+  avoidList.innerHTML = data.avoid.map(r => `<li>${r.item.replace(/_/g,' ')} <span>(${r.predicted_rating}/5)</span></li>`).join('');
+  document.getElementById('quiz-form').classList.add('hidden');
+  document.getElementById('submit-btn').classList.add('hidden');
+  document.querySelector('.hint').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+});
+
+document.getElementById('retry-btn').addEventListener('click', () => location.reload());
+</script>
+</body>
+</html>

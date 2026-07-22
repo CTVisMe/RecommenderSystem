@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+qr_code.png
+.DS_Store
+.claude/
