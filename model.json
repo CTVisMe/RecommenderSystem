@@ -1671,14 +1671,16 @@
     }
   },
   "quiz_items": [
-    "MMA_UFC",
-    "Video_Games",
-    "Superhero_Movies_MCU",
+    "Art_Museums",
+    "Barbie_(movie)",
+    "Cilantro",
     "Country_Music",
-    "Camping",
-    "Spicy_Food",
+    "Golf",
     "Mornings",
-    "Jazz_Music"
+    "Peanut_Butter",
+    "Spicy_Food",
+    "Tattoos",
+    "Winter"
   ],
   "n_students": 500
 }
